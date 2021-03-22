@@ -17,11 +17,10 @@ namespace SampleMVCApp.Controllers
             list.Add("USA");
             list.Add("UK");
         }
-        public IActionResult Index()
+        [Route("Hello/{id?}/{name?}")]
+        public IActionResult Index(int id, string name)
         {
-            ViewData["Message"] = "Select item";
-            ViewData["list"] = new string[] { };
-            ViewData["listdata"] = list;
+            ViewData["Message"] = "id = " + id + ", name = " + name;
             return View();
         }
 
