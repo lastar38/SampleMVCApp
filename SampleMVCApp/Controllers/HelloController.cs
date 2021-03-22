@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace SampleMVCApp.Controllers
 {
@@ -17,11 +18,21 @@ namespace SampleMVCApp.Controllers
             list.Add("USA");
             list.Add("UK");
         }
-        [Route("Hello/{id?}/{name?}")]
+        [HttpGet("Hello/{id?}/{name?}")]
         public IActionResult Index(int id, string name)
         {
-            ViewData["Message"] = "id = " + id + ", name = " + name;
+            ViewData["Message"] = "※セッションにIDとNameを保存しました。";
+            HttpContext.Session.SetInt32("id", id);
+            HttpContext.Session.SetString("name", name);
             return View();
+        }
+        [HttpGet]
+        public IActionResult Other()
+        {
+            ViewData["id"] = HttpContext.Session.GetInt32("id");
+            ViewData["name"] = HttpContext.Session.GetString("name");
+            ViewData["message"] = "保存されたセッションの値を表示します。";
+            return View("Index");
         }
 
         [HttpPost]
