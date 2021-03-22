@@ -8,22 +8,36 @@ namespace SampleMVCApp.Controllers
 {
     public class HelloController : Controller
     {
+        public List<string> list;
+
+        public HelloController()
+        {
+            list = new List<string>();
+            list.Add("Japan");
+            list.Add("USA");
+            list.Add("UK");
+        }
         public IActionResult Index()
         {
-            ViewData["Message"] = "Hello! this is sample message!";
-            ViewData["name"] = "";
-            ViewData["mail"] = "";
-            ViewData["tel"] = "";
+            ViewData["Message"] = "Select item";
+            ViewData["list"] = new string[] { };
+            ViewData["listdata"] = list;
             return View();
         }
 
         [HttpPost]
         public IActionResult Form()
         {
-            ViewData["name"] = Request.Form["name"];
-            ViewData["mail"] = Request.Form["mail"];
-            ViewData["tel"] = Request.Form["tel"];
-            ViewData["Message"] = ViewData["name"] + ", " + ViewData["mail"] + ", " + ViewData["tel"];
+            string[] res = (string[])Request.Form["list"];
+            string msg = "※";
+            foreach (var item in res)
+            {
+                msg += "[" + item + "]";
+            }
+
+            ViewData["message"] = msg + " selected.";
+            ViewData["list"] = Request.Form["list"];
+            ViewData["listdata"] = list;
             return View("Index");
         }
     }
