@@ -109,3 +109,4 @@ D:\work\SampleMVCApp\SampleMVCApp\obj\Debug\netcoreapp3.1\SampleMVCApp.dll
 D:\work\SampleMVCApp\SampleMVCApp\obj\Debug\netcoreapp3.1\SampleMVCApp.pdb
 D:\work\SampleMVCApp\SampleMVCApp\obj\Debug\netcoreapp3.1\SampleMVCApp.genruntimeconfig.cache
 D:\work\SampleMVCApp\SampleMVCApp\obj\Debug\netcoreapp3.1\Razor\Views\Hello\Index.cshtml.g.cs
+D:\work\SampleMVCApp\SampleMVCApp\obj\Debug\netcoreapp3.1\Razor\Views\Hello\_table.cshtml.g.cs

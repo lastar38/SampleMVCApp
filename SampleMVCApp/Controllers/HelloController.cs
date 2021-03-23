@@ -11,22 +11,22 @@ namespace SampleMVCApp.Controllers
 {
     public class HelloController : Controller
     {
-        [HttpGet("Hello/{id?}/{name?}")]
+        [HttpGet]
         public IActionResult Index(int id, string name)
         {
-            ViewData["Message"] = "※セッションにIDとNameを保存しました。";
+            ViewData["message"] = "※テーブルの表示。";
+            ViewData["header"] = new string[] { "id", "name", "mail" };
+            ViewData["data"] = new string[][]
+            {
+                new string[]{ "1", "Taro", "taro@yamada"},
+                new string[]{ "2", "Hanako", "hanako@flower"},
+                new string[]{ "3", "Sachiko", "sachiko@happy" }
+            };
+
             MyData ob = new MyData(id, name);
             HttpContext.Session.Set("object", ObjectToBytes(ob));
             ViewData["object"] = ob;
             return View();
-        }
-        [HttpGet]
-        public IActionResult Other()
-        {
-            ViewData["message"] = "保存されたセッションの値を表示します。";
-            byte[] ob = HttpContext.Session.Get("object");
-            ViewData["object"] = BytesToObject(ob);
-            return View("Index");
         }
 
         private byte[] ObjectToBytes(Object ob)
