@@ -4,51 +4,64 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace SampleMVCApp.Controllers
 {
     public class HelloController : Controller
     {
-        public List<string> list;
-
-        public HelloController()
-        {
-            list = new List<string>();
-            list.Add("Japan");
-            list.Add("USA");
-            list.Add("UK");
-        }
         [HttpGet("Hello/{id?}/{name?}")]
         public IActionResult Index(int id, string name)
         {
             ViewData["Message"] = "※セッションにIDとNameを保存しました。";
-            HttpContext.Session.SetInt32("id", id);
-            HttpContext.Session.SetString("name", name);
+            MyData ob = new MyData(id, name);
+            HttpContext.Session.Set("object", ObjectToBytes(ob));
+            ViewData["object"] = ob;
             return View();
         }
         [HttpGet]
         public IActionResult Other()
         {
-            ViewData["id"] = HttpContext.Session.GetInt32("id");
-            ViewData["name"] = HttpContext.Session.GetString("name");
             ViewData["message"] = "保存されたセッションの値を表示します。";
+            byte[] ob = HttpContext.Session.Get("object");
+            ViewData["object"] = BytesToObject(ob);
             return View("Index");
         }
 
-        [HttpPost]
-        public IActionResult Form()
+        private byte[] ObjectToBytes(Object ob)
         {
-            string[] res = (string[])Request.Form["list"];
-            string msg = "※";
-            foreach (var item in res)
-            {
-                msg += "[" + item + "]";
-            }
+            BinaryFormatter bf = new BinaryFormatter();
+            MemoryStream ms = new MemoryStream();
+            bf.Serialize(ms, ob);
+            return ms.ToArray();
+        }
 
-            ViewData["message"] = msg + " selected.";
-            ViewData["list"] = Request.Form["list"];
-            ViewData["listdata"] = list;
-            return View("Index");
+        private Object BytesToObject(byte[] arr)
+        {
+            MemoryStream ms = new MemoryStream();
+            BinaryFormatter bf = new BinaryFormatter();
+            ms.Write(arr, 0, arr.Length);
+            ms.Seek(0, SeekOrigin.Begin);
+            return (Object)bf.Deserialize(ms);
         }
     }
+
+    [Serializable]
+    class MyData
+    {
+        public int Id = 0;
+        public string Name = "";
+        public MyData(int id, string name)
+        {
+            this.Id = id;
+            this.Name = name;
+        }
+
+        public override string ToString()
+        {
+            return "<" + Id + ": " + Name + ">";
+        }
+    }
+
 }
