@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using SampleMVCApp.Data;
 
 namespace SampleMVCApp
 {
@@ -25,6 +27,9 @@ namespace SampleMVCApp
         {
             services.AddSession();
             services.AddControllersWithViews();
+
+            services.AddDbContext<SampleMVCAppContext>(options =>
+                    options.UseSqlite(Configuration.GetConnectionString("SampleMVCAppContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
